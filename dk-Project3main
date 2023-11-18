@@ -1,0 +1,95 @@
+%2.1a
+picture = imread("WeeksHallSmall.jpg");
+
+imshow(picture);
+
+grayimage = rgb2gray(picture);
+
+imshow(grayimage);
+
+grayimage  = double(grayimage);
+grayimage2  = double(grayimage);
+
+avgIntensity = mean(grayimage(:));
+
+
+%2.1b
+
+% Assuming 'grayimage' is your input grayscale image matrix
+
+% Define M values
+M_values = [2, 4, 8, 16, 32];
+
+% Loop over each M value
+for M = M_values
+    % Create the averaging filter (box filter) kernel
+    h = ones(1, M) / M;
+    v = ones(M, 1) / M;
+
+    % Initialize images for storing results
+    blurred_rows = zeros(size(grayimage));
+    blurred_columns = zeros(size(grayimage));
+
+    % Blur rows
+    for i = 1:size(grayimage, 1)
+        row = conv(grayimage(i, :), h, 'same');
+        blurred_rows(i, :) = row;
+    end
+    
+    % Save the image with blurred rows
+    imwrite(uint8(blurred_rows), sprintf('blurred_rows_M%d.jpg', M));
+    
+    % Now, blur columns using the previously blurred row image
+    for j = 1:size(grayimage2, 2)
+        col = conv(blurred_rows(:, j), v, 'same');
+        blurred_columns(:, j) = col;
+    end
+    
+    % Save the image with blurred columns
+    imwrite(uint8(blurred_columns), sprintf('blurred_columns_M%d.jpg', M));
+end
+
+
+%2.1c
+row_index = round(size(grayimage, 1) / 2);
+selected_row = grayimage(row_index, :);
+figure;
+stem(selected_row);
+title('Pixel Intensity Values of the Center Row');
+
+c = [1,-1];
+filtered_row = conv(selected_row, c, 'same');
+figure;
+stem(filtered_row);
+title('Filtered Signal of the Selected Row');
+
+c = [1, -1];
+
+% Initialize matrices to store the convolution results
+filtered_rows = zeros(size(grayimage));
+filtered_cols = zeros(size(grayimage));
+
+% Convolve the filter with each row
+for i = 1:size(grayimage, 1)
+    filtered_rows(i, :) = conv(grayimage(i, :), c, 'same');
+end
+
+for j = 1:size(grayimage, 2)
+    filtered_columns(:, j) = grayimage(:, j);
+end
+
+
+
+imagesc(grayimage)
+
+%Testing With Threshold
+
+threshold_value = 10;
+
+
+binary_edge_image = abs(filtered_rows) > threshold_value;
+
+
+imagesc(binary_edge_image)
+
+
