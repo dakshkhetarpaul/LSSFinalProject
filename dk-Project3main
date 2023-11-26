@@ -1,6 +1,6 @@
 %2.1a
 picture = imread("WeeksHallSmall.jpg");
-
+%test
 imshow(picture);
 
 grayimage = rgb2gray(picture);
