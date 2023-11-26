@@ -92,9 +92,54 @@ binary_edge_image = abs(filtered_rows) > threshold_value;
 
 imagesc(binary_edge_image)
 
-%2.3a
+%2.3prep
 
 bird = imread("skybird.jpg");
 graybird = rgb2gray(bird);
 imshow(graybird);
+
+%2.3a
+% Define the range for n
+n_g0 = 0:7;
+n_h0 = 0:100; % Assuming after 100, the terms are negligible
+
+% Define g0[n] and h0[n]
+g0 = @(n) 8 - n;
+u = @(n) double(n >= 0); % Unit step function
+h0 = @(n) (0.95).^n .* (u(n) - u(n - 8));
+
+% Compute the energy of g0[n]
+E_g0 = sum(g0(n_g0).^2);
+
+% Compute the energy of h0[n]
+E_h0 = sum(h0(n_h0).^2);
+
+% Compute gamma and eta
+gamma = sqrt(1 / E_g0);
+eta = sqrt(1 / E_h0);
+
+% Display the results
+fprintf('Gamma: %f\n', gamma);
+fprintf('Eta: %f\n', eta);
+
+% Plot the impulse responses g[n] and h[n]
+n_g = n_g0; % Same range as g0[n]
+n_h = n_h0; % Same range as h0[n]
+
+g = gamma * g0(n_g);
+h = eta * h0(n_h);
+
+% Plot g[n]
+figure;
+stem(n_g, g);
+title('Normalized Impulse Response g[n]');
+xlabel('n');
+ylabel('g[n]');
+
+% Plot h[n]
+figure;
+stem(n_h, h);
+title('Normalized Impulse Response h[n]');
+xlabel('n');
+ylabel('h[n]');
 
