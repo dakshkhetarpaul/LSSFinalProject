@@ -92,4 +92,9 @@ binary_edge_image = abs(filtered_rows) > threshold_value;
 
 imagesc(binary_edge_image)
 
+%2.3a
+
+bird = imread("skybird.jpg");
+graybird = rgb2gray(bird);
+imshow(graybird);
 
