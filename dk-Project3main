@@ -2,7 +2,7 @@
 picture = imread("WeeksHallSmall.jpg");
 
 imshow(picture);
-
+\\printnothing
 grayimage = rgb2gray(picture);
 
 imshow(grayimage);
