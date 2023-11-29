@@ -143,3 +143,48 @@ title('Normalized Impulse Response h[n]');
 xlabel('n');
 ylabel('h[n]');
 
+%2.3b
+% Define the normalized impulse responses g[n] and h[n]
+n_g = 0:7;
+n_h = 0:100; % You might need to adjust this range appropriately
+
+g_n = gamma * g0(n_g);
+h_n = eta * h0(n_h);
+
+% Number of points for frequency response
+num_points = 512;
+
+% Compute frequency response for g[n]
+[Hg, Wg] = freqz(g_n, 1, num_points);
+
+% Compute frequency response for h[n]
+[Hh, Wh] = freqz(h_n, 1, num_points);
+
+% Plot magnitude and phase for g[n]
+figure;
+subplot(2,1,1);
+plot(Wg/pi, 20*log10(abs(Hg))); % Magnitude in dB
+title('Magnitude Response of G(e^{j\omega})');
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Magnitude (dB)');
+
+subplot(2,1,2);
+plot(Wg/pi, angle(Hg)); % Phase in radians
+title('Phase Response of G(e^{j\omega})');
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Phase (radians)');
+
+% Plot magnitude and phase for h[n]
+figure;
+subplot(2,1,1);
+plot(Wh/pi, 20*log10(abs(Hh))); % Magnitude in dB
+title('Magnitude Response of H(e^{j\omega})');
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Magnitude (dB)');
+
+subplot(2,1,2);
+plot(Wh/pi, angle(Hh)); % Phase in radians
+title('Phase Response of H(e^{j\omega})');
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Phase (radians)');
+
