@@ -518,11 +518,11 @@ title('Pole-Zero Plot for h[n]');
 % in the complex plane without the unit circle, use the following:
 
 % Pole-Zero map for g[n]
-figure;
-pzmap(sys_g);
-title('Pole-Zero Map for g[n]');
+%figure;
+%pzmap(sys_g);
+%title('Pole-Zero Map for g[n]');
 
 % Pole-Zero map for h[n]
-figure;
-pzmap(sys_h);
-title('Pole-Zero Map for h[n]');
+%figure;
+%pzmap(sys_h);
+%title('Pole-Zero Map for h[n]');
