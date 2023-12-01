@@ -526,3 +526,99 @@ title('Pole-Zero Plot for h[n]');
 %figure;
 %pzmap(sys_h);
 %title('Pole-Zero Map for h[n]');
+
+%2.3e
+
+
+% Number of points for the DTFT
+N = 512;
+
+% Compute the DTFT for the inverse of g[n]
+[InvHg, Wg] = freqz(1, b_g, N); % Note the switch in numerator and denominator for the inverse
+
+% Compute the DTFT for the inverse of h[n]
+[InvHh, Wh] = freqz(1, b_h, N); % Note the switch in numerator and denominator for the inverse
+
+% Plot magnitude and phase for the inverse of g[n]
+figure;
+subplot(2,1,1);
+plot(Wg/pi, 20*log10(abs(InvHg))); % Magnitude in dB
+title('Magnitude Response of Inverse G(e^{j\omega})');
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Magnitude (dB)');
+
+subplot(2,1,2);
+plot(Wg/pi, unwrap(angle(InvHg))); % Phase in radians
+title('Phase Response of Inverse G(e^{j\omega})');
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Phase (radians)');
+
+% Plot magnitude and phase for the inverse of h[n]
+figure;
+subplot(2,1,1);
+plot(Wh/pi, 20*log10(abs(InvHh))); % Magnitude in dB
+title('Magnitude Response of Inverse H(e^{j\omega})');
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Magnitude (dB)');
+
+subplot(2,1,2);
+plot(Wh/pi, unwrap(angle(InvHh))); % Phase in radians
+title('Phase Response of Inverse H(e^{j\omega})');
+xlabel('Normalized Frequency (\times\pi rad/sample)');
+ylabel('Phase (radians)');
+
+%2.3f
+
+recovered_image_g = filter(1, b_g, blurred_image_g);
+
+% Apply the inverse filter for h[n]
+recovered_image_h = filter(1, b_h, blurred_image_h);
+
+% Display the results
+figure;
+subplot(1, 2, 1);
+imshow(uint8(recovered_image_g));
+title('Image using Inverse of g[n]');
+
+subplot(1, 2, 2);
+imshow(uint8(recovered_image_h));
+title('Image using Inverse of h[n]');
+
+%2.3g
+
+% Assuming you have the Image Processing Toolbox
+image = imread('skybird.JPG');
+gray_image = rgb2gray(image);
+
+% Apply the inverse filter for h[n]
+recovered_image_h = filter(1, b_h, blurred_image_h);
+
+% Define the inverse filter coefficients for the IIR filter
+a_bar_h = [1 -0.95 zeros(1, 99)];  % Assuming the IIR filter has 100 coefficients
+
+% Apply the inverse filter for the IIR filter
+recovered_image_bar_h = filter(1, a_bar_h, blurred_image_h);
+
+% Display the results
+figure;
+subplot(1, 3, 1);
+imshow(uint8(recovered_image_h));
+title('Image using Inverse of h[n]');
+
+subplot(1, 3, 2);
+imshow(uint8(recovered_image_bar_h));
+title('Image using Inverse of \bar{h}[n]');
+
+% Experiment with different values of AMIN and AMAX
+amin_values = [0, 50, 100];
+amax_values = [150, 200, 255];
+
+subplot(1, 3, 3);
+for i = 1:numel(amin_values)
+    for j = 1:numel(amax_values)
+        recovered_image_bar_h_adjusted = mat2gray(recovered_image_bar_h, [amin_values(i), amax_values(j)]);
+        imshow(recovered_image_bar_h_adjusted);
+        title(['Adjusted: AMIN=', num2str(amin_values(i)), ', AMAX=', num2str(amax_values(j))]);
+        pause(1);  % Pause for a moment to observe each adjustment
+    end
+end
