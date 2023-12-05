@@ -622,3 +622,35 @@ for i = 1:numel(amin_values)
         pause(1);  % Pause for a moment to observe each adjustment
     end
 end
+%2.3e2
+
+orig_image = imread('skybird.jpg');
+grayscale = rgb2gray(orig_image);
+blurred = zeros(size(grayscale));
+[rows, cols] = size(grayscale);
+row_one = zeros(1, 1024);
+windowSize = 5;
+bw = (1 / windowSize) * (1 : windowSize);
+a = 1;
+b = 0.436244706 * 0.95.^(0:7);
+for row_index = 1:rows
+    row = grayscale(row_index, :);
+    row = filter(b, a, row);
+    blurred(row_index, :) = row(1, :);
+end
+deblurred = zeros(size(grayscale));
+for row_index = 1:rows
+    row = blurred(row_index, :);
+    row = filter([1 -0.95], 0.31224312, row);
+    deblurred(row_index, :) = row(1, :);
+end
+figure("Name", "Deblurred image")
+imshow(deblurred, [0, 1])
+figure("Name", "Deblurred image")
+imshow(deblurred, [0.3, 0.8])
+figure("Name", "Contrast histrogram")
+histogram = reshape(deblurred, [1, rows * cols]);
+hist(histogram, 0:0.01:1);
+title("Histogram for deblurred grayscale")
+xlabel("Intensity level");
+ylabel("Frequency of luminance")
